@@ -1,17 +1,38 @@
 
 #!/bin/bash
 
+# -- Customization --
+# Colors for the menu
+selected_fg_color="\e[38;5;0m"  # Black
+selected_bg_color="\e[48;5;220m" # Gold
+unselected_fg_color="\e[38;5;255m" # White
+unselected_bg_color="\e[0m" # Default background
+
+# Function to update filtered options
+update_filtered_options() {
+  filtered_options=()
+  original_indices=()
+  for i in "${!options[@]}"; do
+    # Case-insensitive search
+    if [[ "${options[$i],,}" == *"${search_query,,}"* ]]; then
+      filtered_options+=("${options[$i]}")
+      original_indices+=($i)
+    fi
+  done
+}
+
 # Function to display the menu
 display_menu() {
   local i
-  for i in "${!options[@]}"; do
+  for i in "${!filtered_options[@]}"; do
     if [[ $i -eq $selected ]]; then
       # Use printf for reliable escape sequence handling in debug output
-      printf "%b\n" "\e[7m${options[$i]}\e[0m"
+      printf "%b%b%s%b\n" "${selected_fg_color}" "${selected_bg_color}" "${filtered_options[$i]}" "\e[0m"
     else
-      echo "${options[$i]}"
+      printf "%b%b%s%b\n" "${unselected_fg_color}" "${unselected_bg_color}" "${filtered_options[$i]}" "\e[0m"
     fi
   done
+  printf "\nSearch: %s" "$search_query"
 }
 
 # Function to handle arrow key input
@@ -23,29 +44,38 @@ handle_input() {
     if [[ "$key" == "[A" ]]; then # Up arrow
       ((selected--))
       if [[ $selected -lt 0 ]]; then
-        selected=$(( ${#options[@]} - 1 ))
+        selected=$(( ${#filtered_options[@]} - 1 ))
       fi
     elif [[ "$key" == "[B" ]]; then # Down arrow
       ((selected++))
-      if [[ $selected -ge ${#options[@]} ]]; then
+      if [[ $selected -ge ${#filtered_options[@]} ]]; then
         selected=0
       fi
-    elif [[ "$key" == "[C" ]]; then #right arrow
-      #do nothing
-      true
-    elif [[ "$key" == "[D" ]]; then #left arrow
-      #do nothing
-      true
     fi
   elif [[ "$key" == $'\n' ]]; then # Enter key
     return 0 # Indicate selection
+  elif [[ "$key" == $'\x7f' ]]; then # Backspace
+    # Remove the last character from the search query
+    if [ ${#search_query} -gt 0 ]; then
+      search_query="${search_query%?}"
+      selected=0 # Reset selection
+      update_filtered_options
+    fi
   else
-    return 1 # Indicate no selection
+    # Append the character to the search query
+    search_query+="$key"
+    selected=0 # Reset selection
+    update_filtered_options
   fi
+  return 1 # Indicate no selection
 }
 
 # Menu options
 options=("Option 1" "Option 2" "Option 3" "Exit")
+search_query=""
+filtered_options=()
+original_indices=()
+update_filtered_options
 
 # Initial selection
 selected=0
@@ -54,15 +84,16 @@ selected=0
 while true; do
   clear
   display_menu
-  if handle_input; then
-    continue
-  else
+  handle_input
+  if [[ $? -eq 0 ]]; then
     break
   fi
 done
 
 # Execute selected option
-case $selected in
+# Get the original index of the selected option
+original_selected=${original_indices[$selected]}
+case $original_selected in
   0)
     echo "Executing Option 1..."
     # Add your code for Option 1 here
