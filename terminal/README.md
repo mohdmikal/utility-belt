@@ -26,7 +26,7 @@ This script provides a simple interactive menu in Bash that allows you to naviga
 
 
 ## Notes
-* This script requires Bash.
+* This script requires Bash version 4.0 or newer.
 * Ensure your terminal supports ANSI escape codes for the highlighting to work correctly.
 
 ## Contributing
