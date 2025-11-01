@@ -1,17 +1,18 @@
-# Bash Menu with Arrow Key Navigation
+# Zsh Menu with Arrow Key Navigation
 
-This script provides a simple interactive menu in Bash that allows you to navigate options using the up and down arrow keys.
+This script provides a simple interactive menu in Zsh that allows you to navigate options using the up and down arrow keys.
 
 ## Usage
 
-1.  **Save the script:** Save the code as `bash-menu-arrow.sh` (or your preferred name).
-2.  **Make it executable:** `chmod +x bash-menu-arrow.sh`
-3.  **Run the script:** `./bash-menu-arrow.sh`
+1.  **Save the script:** Save the code as `zsh-menu-arrow.zsh` (or your preferred name).
+2.  **Make it executable:** `chmod +x zsh-menu-arrow.zsh`
+3.  **Run the script:** `./zsh-menu-arrow.zsh`
 
 ## Features
 
 * **Arrow Key Navigation:** Use the up and down arrow keys to move between menu options.
 * **Enter to Select:** Press Enter to execute the selected option.
+* **Search/Filter:** Type to filter the menu options in real-time.
 * **Clear Screen:** The screen is cleared before each menu display.
 * **Exit Option:** An "Exit" option is included for graceful termination.
 * **Customizable:** Easily modify the menu options and the actions performed for each option.
@@ -26,7 +27,7 @@ This script provides a simple interactive menu in Bash that allows you to naviga
 
 
 ## Notes
-* This script requires Bash version 4.0 or newer.
+* This script requires Zsh.
 * Ensure your terminal supports ANSI escape codes for the highlighting to work correctly.
 
 ## Contributing
