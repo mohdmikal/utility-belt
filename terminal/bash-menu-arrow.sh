@@ -62,8 +62,11 @@ handle_input() {
       update_filtered_options
     fi
   else
-    # Append the character to the search query
-    search_query+="$key"
+    # Append the character to the search query, handle spaces
+    case "$key" in
+      ' ') search_query+=' ' ;;
+      *[[:print:]]*) search_query+="$key" ;;
+    esac
     selected=0 # Reset selection
     update_filtered_options
   fi
