@@ -41,15 +41,17 @@ handle_input() {
   read -rsn1 key
   if [[ "$key" == $'\e' ]]; then
     read -rsn2 key
-    if [[ "$key" == "[A" ]]; then # Up arrow
-      ((selected--))
-      if [[ $selected -lt 0 ]]; then
-        selected=$(( ${#filtered_options[@]} - 1 ))
-      fi
-    elif [[ "$key" == "[B" ]]; then # Down arrow
-      ((selected++))
-      if [[ $selected -ge ${#filtered_options[@]} ]]; then
-        selected=0
+    if [[ ${#filtered_options[@]} -gt 0 ]]; then
+      if [[ "$key" == "[A" ]]; then # Up arrow
+        ((selected--))
+        if [[ $selected -lt 0 ]]; then
+          selected=$(( ${#filtered_options[@]} - 1 ))
+        fi
+      elif [[ "$key" == "[B" ]]; then # Down arrow
+        ((selected++))
+        if [[ $selected -ge ${#filtered_options[@]} ]]; then
+          selected=0
+        fi
       fi
     fi
   elif [[ "$key" == $'\n' ]]; then # Enter key
